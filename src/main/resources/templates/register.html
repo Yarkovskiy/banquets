@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/common.css">
+    <title>Регистрация</title>
+</head>
+<body>
+<div class="register-container">
+    <h2>Регистрация</h2>
+
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <form action="/register" method="post" onsubmit="return validateForm()">
+        <input type="text" id="name" name="name" placeholder="Имя" required>
+
+        <input type="text" id="surname" name="surname" placeholder="Фамилия">
+
+        <input type="email" id="email" name="email" placeholder="E-mail" required>
+
+        <input type="password" id="password" name="password" minlength="5" placeholder="Пароль" required>
+
+        <input type="password" id="confirmPassword" name="confirmPassword" minlength="5"
+               placeholder="Подтвердите пароль" required>
+
+        <input type="text" id="mobile_number" name="mobile_number" placeholder="Мобильный телефон">
+
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+
+    <p>Уже есть аккаунт? <a href="/login" >Войти</a></p>
+
+</div>
+
+<script src="/register.js"></script>
+</body>
+</html>
