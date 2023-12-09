@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/common.css">
+    <link rel="stylesheet" href="/header.css">
+    <title>Список банкетных залов</title>
+
+    <style>
+        .hall-list {
+            background-color: #e8e8e8;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            width: 500px;
+            text-align: center;
+
+            position: relative;
+            top: 75px; /* Расстояние от верхней части экрана */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .hall-item {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            /*cursor: pointer;*/
+        }
+
+        /*.hall-item:hover {
+            background-color: #f2f2f2;
+        }*/
+    </style>
+
+</head>
+<body>
+
+<header>
+    <nav>
+        <ul>
+            <li><a href="/add-hall">Добавить зал</a></li>
+            <li><a href="/hall-list">Список залов</a></li>
+            <li><a href="#">Добавить блюдо</a></li>
+            <li><a href="#">Список блюд</a></li>
+            <li><a href="#">Список заказов</a></li>
+            <li><a href="/logout">Выход</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="hall-list">
+    <h2>Список банкетных залов</h2>
+
+    <div th:each="hall : ${halls}" class="hall-item">
+        <a th:href="'/hall/' + ${hall.id}">
+            <h3 th:text="${hall.name}"></h3>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

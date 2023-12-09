@@ -2,6 +2,8 @@ package com.example.banquets.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "halls")
 public class BanquetHall {
@@ -14,14 +16,24 @@ public class BanquetHall {
     private int capacity;
     private String description;
 
+    @Column(name = "rate")
+    private BigDecimal rate;
+
     @Column(name = "manager_id")
     private long managerId;
 
-    public BanquetHall(long id, String name, int capacity, String description, long managerId) {
+
+    public BanquetHall(long id,
+                       String name,
+                       int capacity,
+                       String description,
+                       BigDecimal hourlyRate,
+                       long managerId) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
         this.description = description;
+        this.rate = hourlyRate;
         this.managerId = managerId;
     }
 
@@ -58,6 +70,14 @@ public class BanquetHall {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal hourlyRate) {
+        this.rate = hourlyRate;
     }
 
     public long getManagerId() {

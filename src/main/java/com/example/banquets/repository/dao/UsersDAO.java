@@ -1,6 +1,7 @@
-package com.example.banquets.repository;
+package com.example.banquets.repository.dao;
 
 import com.example.banquets.model.User;
+import com.example.banquets.repository.UsersRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,16 +19,12 @@ public class UsersDAO {
         return usersRepository.findAll();
     }
 
-    public void save(User user) {
-        usersRepository.save(user);
+    public User save(User user) {
+        return usersRepository.save(user);
     }
 
     public User findByEmail(String email) {
         return usersRepository.findByEmail(email);
-    }
-
-    public boolean existsByEmailAndPassword(User user) {
-        return usersRepository.existsByEmailAndPassword(user.getEmail(), user.getPassword());
     }
 
     public User getUserByEmail(String email) {

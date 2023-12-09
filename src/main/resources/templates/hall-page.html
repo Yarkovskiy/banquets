@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/common.css">
+    <link rel="stylesheet" href="/header.css">
+    <title>Просмотр банкетного зала</title>
+
+    <style>
+
+        .hall-details {
+            background-color: #e8e8e8;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            width: 600px;
+            text-align: center;
+
+            position: relative;
+            top: 75px; /* Расстояние от верхней части экрана */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .hall-photo {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <ul>
+            <li><a href="/add-hall">Добавить зал</a></li>
+            <li><a href="/hall-list">Список залов</a></li>
+            <li><a href="#">Добавить блюдо</a></li>
+            <li><a href="#">Список блюд</a></li>
+            <li><a href="#">Список заказов</a></li>
+            <li><a href="/logout">Выход</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="hall-details">
+    <h2 th:text="${hall.name}"></h2>
+    <p th:text="'Вместимость: ' + ${hall.capacity}"></p>
+    <p th:text="'Цена аренды: ' + ${hall.rate}"></p>
+    <p th:text="${hall.description}"></p>
+
+    <div th:each="photo : ${hallPhotos}">
+        <img class="hall-photo" th:src="${photo.photoUrl}" alt="Banquet Hall Photo">
+    </div>
+
+
+    <form th:action="@{'/delete-hall/' + ${hall.id}}" method="post">
+        <button class="delete-button" type="submit">Удалить зал</button>
+    </form>
+
+</div>
+
+</body>
+</html>

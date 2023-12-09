@@ -2,7 +2,8 @@ package com.example.banquets.controllers;
 
 import com.example.banquets.model.User;
 import com.example.banquets.model.UserRole;
-import com.example.banquets.repository.UsersDAO;
+import com.example.banquets.model.sessionData.SessionData;
+import com.example.banquets.repository.dao.UsersDAO;
 import com.example.banquets.security.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +15,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class RegistrationController {
 
-    private final UsersDAO usersDAO;
+    private UsersDAO usersDAO;
+    private SessionData sessionData;
 
 
-    public RegistrationController(UsersDAO usersDAO) {
+    public RegistrationController(UsersDAO usersDAO,
+                                  SessionData sessionData) {
         this.usersDAO = usersDAO;
+        this.sessionData = sessionData;
     }
 
     @GetMapping("/register")
@@ -45,7 +49,7 @@ public class RegistrationController {
             String hashedPassword = PasswordEncoder.hashPassword(newUser.getPassword());
             newUser.setPassword(hashedPassword);
 
-            usersDAO.save(newUser);
+            sessionData.setCurrentUser(usersDAO.save(newUser));
 
             return "redirect:/dashboard";
 
