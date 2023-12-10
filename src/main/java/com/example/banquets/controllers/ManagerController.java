@@ -1,44 +1,43 @@
 package com.example.banquets.controllers;
 
 import com.example.banquets.model.BanquetHall;
+import com.example.banquets.model.Dish;
+import com.example.banquets.model.DishPhoto;
 import com.example.banquets.model.HallPhoto;
 import com.example.banquets.model.sessionData.SessionData;
+import com.example.banquets.repository.DishPhotosRepository;
+import com.example.banquets.repository.dao.DishPhotosDAO;
+import com.example.banquets.repository.dao.DishesDAO;
 import com.example.banquets.repository.dao.HallsDAO;
-import com.example.banquets.repository.dao.PhotosDAO;
-import jakarta.persistence.EntityManager;
+import com.example.banquets.repository.dao.HallPhotosDAO;
 import jakarta.transaction.Transactional;
-import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class ManagerController {
 
     HallsDAO hallsDAO;
-    PhotosDAO photosDAO;
+    DishesDAO dishesDAO;
+    HallPhotosDAO hallPhotosDAO;
+    DishPhotosDAO dishPhotosDAO;
 
     SessionData sessionData;
 
     public ManagerController(HallsDAO hallsDAO,
-                             PhotosDAO photosDAO,
+                             DishesDAO dishesDAO,
+                             HallPhotosDAO hallPhotosDAO,
+                             DishPhotosDAO dishPhotosDAO,
                              SessionData sessionData) {
         this.hallsDAO = hallsDAO;
-        this.photosDAO = photosDAO;
+        this.dishesDAO = dishesDAO;
+        this.hallPhotosDAO = hallPhotosDAO;
+        this.dishPhotosDAO = dishPhotosDAO;
         this.sessionData = sessionData;
     }
 
@@ -63,7 +62,7 @@ public class ManagerController {
 
         long hallId = hallsDAO.save(hall).getId();
         for (MultipartFile photo : photos) {
-            photosDAO.savePhoto(hallId, photo);
+            hallPhotosDAO.savePhoto(hallId, photo);
         }
 
         return "redirect:/add-hall";
@@ -83,18 +82,77 @@ public class ManagerController {
         BanquetHall hall = hallsDAO.getById(id);
         model.addAttribute("hall", hall);
 
-        List<HallPhoto> hallPhotos = photosDAO.getAllByHallId(id);
+        List<HallPhoto> hallPhotos = hallPhotosDAO.getAllByHallId(id);
         model.addAttribute("hallPhotos", hallPhotos);
 
         return "hall-page.html";
     }
 
-    @GetMapping("/delete-hall/{id}")
+    @Transactional
+    @PostMapping("/delete-hall/{id}")
     public String deleteHall(@PathVariable Long id) {
 
+        hallPhotosDAO.deletePhotos(id);
+        hallsDAO.deleteById(id);
 
-
-        return "redirect:/hall-list.html";
+        return "redirect:/hall-list";
     }
+
+    @GetMapping("/add-dish")
+    public String addDish() {
+        return "add-dish-form.html";
+    }
+
+    @PostMapping("/add-dish")
+    public String addDish(@RequestParam String name,
+                          @RequestParam BigDecimal price,
+                          @RequestParam String description,
+                          @RequestParam("photos") List<MultipartFile> photos) {
+
+        Dish dish = new Dish();
+        dish.setName(name);
+        dish.setPrice(price);
+        dish.setDescription(description);
+        dish.setManagerId(sessionData.getCurrentUser().getId());
+
+        long dishId = dishesDAO.save(dish).getId();
+
+        for (MultipartFile photo : photos) {
+            dishPhotosDAO.savePhoto(dishId, photo);
+        }
+
+        return "redirect:/add-dish";
+    }
+
+    @GetMapping("/dish-list")
+    public String getDishList(Model model) {
+        model.addAttribute("dishes",
+                dishesDAO.getAllByManagerId(sessionData.getCurrentUser().getId()));
+
+        return "dish-list.html";
+    }
+
+    @GetMapping("/dish/{id}")
+    public String viewDish(@PathVariable Long id, Model model) {
+
+        Dish dish = dishesDAO.getById(id);
+        model.addAttribute("dish", dish);
+
+        List<DishPhoto> dishPhotos = dishPhotosDAO.getAllByDishId(id);
+        model.addAttribute("dishPhotos", dishPhotos);
+
+        return "dish-page.html";
+    }
+
+    @Transactional
+    @PostMapping("/delete-dish/{id}")
+    public String deleteDish(@PathVariable Long id) {
+
+        dishPhotosDAO.deletePhotos(id);
+        dishesDAO.deleteById(id);
+
+        return "redirect:/dish-list";
+    }
+
 
 }

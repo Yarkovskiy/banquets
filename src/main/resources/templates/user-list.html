@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/common.css">
-    <link rel="stylesheet" href="/header.css">
-    <title>Список банкетных залов</title>
+    <link rel="stylesheet" href="/static/common.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <title>Список пользователей</title>
 
     <style>
-        .hall-list {
+        .user-list {
             background-color: #e8e8e8;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
@@ -22,7 +22,7 @@
             transform: translateX(-50%);
         }
 
-        .hall-item {
+        .user-item {
             background-color: #fff;
             margin-bottom: 10px;
             padding: 10px;
@@ -38,22 +38,19 @@
 <header>
     <nav>
         <ul>
-            <li><a href="/add-hall">Добавить зал</a></li>
-            <li><a href="/hall-list">Список залов</a></li>
-            <li><a href="/add-dish">Добавить блюдо</a></li>
-            <li><a href="/dish-list">Список блюд</a></li>
-            <li><a href="#">Список заказов</a></li>
+            <li><a href="/user-list">Список пользователей</a></li>
+            <li><a href="#">Запасной</a></li>
             <li><a href="/logout">Выход</a></li>
         </ul>
     </nav>
 </header>
 
-<div class="hall-list">
-    <h2>Список банкетных залов</h2>
+<div class="user-list">
+    <h2>Список пользователей</h2>
 
-    <div th:each="hall : ${halls}" class="hall-item">
-        <a th:href="'/hall/' + ${hall.id}">
-            <h3 th:text="${hall.name}"></h3>
+    <div th:each="user : ${users}" class="user-item">
+        <a th:href="'/user/' + ${user.id}">
+            <h3 th:text="${user.name}"></h3>
         </a>
     </div>
 </div>

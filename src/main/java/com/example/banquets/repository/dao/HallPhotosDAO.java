@@ -1,30 +1,36 @@
 package com.example.banquets.repository.dao;
 
 import com.example.banquets.model.HallPhoto;
-import com.example.banquets.repository.PhotosRepository;
+import com.example.banquets.repository.HallPhotosRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Repository
-public class PhotosDAO {
+public class HallPhotosDAO {
 
-    private PhotosRepository photosRepository;
+    private HallPhotosRepository hallPhotosRepository;
 
-    public PhotosDAO(PhotosRepository photosRepository) {
-        this.photosRepository = photosRepository;
+
+    public HallPhotosDAO(HallPhotosRepository hallPhotosRepository) {
+        this.hallPhotosRepository = hallPhotosRepository;
     }
 
     public HallPhoto save(HallPhoto photo) {
-        return photosRepository.save(photo);
+        return hallPhotosRepository.save(photo);
     }
 
     public List<HallPhoto> getAllByHallId(Long id) {
-        return photosRepository.getAllByHallId(id);
+        return hallPhotosRepository.getAllByHallId(id);
+    }
+
+    public void deleteAllByHallId(Long id) {
+        hallPhotosRepository.deleteAllByHallId(id);
     }
 
     public void savePhoto(long hallId, MultipartFile photo) {
@@ -43,6 +49,23 @@ public class PhotosDAO {
             e.printStackTrace();
         }
     }
+
+    public void deletePhotos(long hallId) {
+        try {
+            List<HallPhoto> photos = getAllByHallId(hallId);
+
+            for(HallPhoto photo : photos) {
+                Path filePath = Path.of("src/main/resources/static", photo.getPhotoUrl());
+                Files.deleteIfExists(filePath);
+            }
+
+            deleteAllByHallId(hallId);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 }

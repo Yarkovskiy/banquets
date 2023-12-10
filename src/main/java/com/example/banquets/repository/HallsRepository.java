@@ -12,5 +12,7 @@ public interface HallsRepository extends JpaRepository<BanquetHall, Long> {
 
     BanquetHall getById(Long id);
 
+    void deleteById(Long id);
+
 
 }

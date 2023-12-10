@@ -34,14 +34,17 @@ public class LoginController {
     }
 
     @GetMapping("/logout")
-    public String getLogout() { // todo сделать очистку сессионных данных
+    public String getLogout() {
+
+        sessionData.setCurrentUser(null);
+
         return "login.html";
     }
 
 
     @PostMapping("/login")
     public String loginUser(@ModelAttribute User user,
-                                            RedirectAttributes redirectAttributes) {
+                            RedirectAttributes redirectAttributes) {
 
         User checkedUser = usersDAO.getUserByEmail(user.getEmail());
         if (checkedUser != null &&
@@ -51,10 +54,15 @@ public class LoginController {
 
             sessionData.setCurrentUser(checkedUser);
 
-            if (checkedUser.getRole() == UserRole.CUSTOMER ) // todo изменить на MANAGER
-                return "redirect:/add-hall"; // todo изменить на другую страницу
+            String redirectPath;
 
-            return "redirect:/dashboard"; //todo изменить редирект
+            if (checkedUser.getRole() == UserRole.MANAGER) {
+                redirectPath = "/add-hall";
+            } else {
+                redirectPath = "/dashboard";
+            }
+
+            return "redirect:" + redirectPath;
         }
 
         // В случае неудачной авторизации, добавляем сообщение об ошибке в атрибуты редиректа

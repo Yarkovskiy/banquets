@@ -27,4 +27,8 @@ public class HallsDAO {
         return hallsRepository.getById(id);
     }
 
+    public void deleteById(Long id) {
+        hallsRepository.deleteById(id);
+    }
+
 }

@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PhotosRepository extends JpaRepository<HallPhoto, Long> {
+public interface HallPhotosRepository extends JpaRepository<HallPhoto, Long> {
 
     List<HallPhoto> getAllByHallId(Long id);
+
+    void deleteAllByHallId(Long id);
 
 }

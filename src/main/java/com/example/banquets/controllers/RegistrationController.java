@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -35,15 +36,24 @@ public class RegistrationController {
 
     @PostMapping("/register")
     public String registerNewUser(@ModelAttribute User newUser,
+                                  @RequestParam("role") String role,
                                   RedirectAttributes redirectAttributes) {
 
         if (usersDAO.findByEmail(newUser.getEmail()) == null) {
 
-            // присвоение роли пользователю
-            if (newUser.getEmail().equals("admin@email.com"))
+            String redirectPath;
+
+            if (newUser.getEmail().equals("admin@email.com")) {
                 newUser.setRole(UserRole.ADMIN);
-            else
+                redirectPath = "/dashboard"; // todo изменить путь
+            }
+            else if (role.equals("CUSTOMER")) {
                 newUser.setRole(UserRole.CUSTOMER);
+                redirectPath = "/dashboard"; // todo изменить путь
+            } else {
+                newUser.setRole(UserRole.MANAGER);
+                redirectPath = "/add-hall";
+            }
 
             // хеширование пароля
             String hashedPassword = PasswordEncoder.hashPassword(newUser.getPassword());
@@ -51,7 +61,7 @@ public class RegistrationController {
 
             sessionData.setCurrentUser(usersDAO.save(newUser));
 
-            return "redirect:/dashboard";
+            return "redirect:" + redirectPath;
 
         }
 

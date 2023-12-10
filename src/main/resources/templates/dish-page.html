@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/common.css">
     <link rel="stylesheet" href="/header.css">
-    <title>Просмотр банкетного зала</title>
+    <title>Просмотр блюда</title>
 
     <style>
 
-        .hall-details {
+        .dish-details {
             background-color: #e8e8e8;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
@@ -23,7 +23,7 @@
             transform: translateX(-50%);
         }
 
-        .hall-photo {
+        .dish-photo {
             max-width: 100%;
             height: auto;
             margin-bottom: 10px;
@@ -58,19 +58,18 @@
     </nav>
 </header>
 
-<div class="hall-details">
-    <h2 th:text="${hall.name}"></h2>
-    <p th:text="'Вместимость: ' + ${hall.capacity}"></p>
-    <p th:text="'Цена аренды: ' + ${hall.rate}"></p>
-    <p th:text="${hall.description}"></p>
+<div class="dish-details">
+    <h2 th:text="${dish.name}"></h2>
+    <p th:text="'Цена: ' + ${dish.price}"></p>
+    <p th:text="${dish.description}"></p>
 
-    <div th:each="photo : ${hallPhotos}">
-        <img class="hall-photo" th:src="${photo.photoUrl}" alt="Banquet Hall Photo">
+    <div th:each="photo : ${dishPhotos}">
+        <img class="dish-photo" th:src="${photo.photoUrl}" alt="Banquet Hall Photo">
     </div>
 
 
-    <form th:action="@{'/delete-hall/' + ${hall.id}}" method="post">
-        <button class="delete-button" type="submit">Удалить зал</button>
+    <form th:action="@{'/delete-dish/' + ${dish.id}}" method="post">
+        <button class="delete-button" type="submit">Удалить блюдо</button>
     </form>
 
 </div>
